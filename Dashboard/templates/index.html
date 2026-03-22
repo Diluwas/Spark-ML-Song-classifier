@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎵 Song Genre Classifier</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">🎵</span>
+                <h1>SongScope</h1>
+            </div>
+            <p class="tagline">AI-Powered Genre Classifier</p>
+        </div>
+
+        <div class="input-section">
+            <label for="lyrics-input">Paste Song Lyrics</label>
+            <textarea
+                id="lyrics-input"
+                placeholder="Enter or paste song lyrics here to classify the genre..."
+                rows="8"
+            ></textarea>
+
+            <button id="classify-btn" type="button">
+                <span class="btn-icon">🔍</span>
+                <span class="btn-text">Classify Genre</span>
+                <span class="btn-loader" hidden>
+                    <span class="spinner"></span> Analyzing...
+                </span>
+            </button>
+
+            <button id="clear-btn" type="button" class="btn-secondary">
+                <span>🗑️ Clear All</span>
+            </button>
+        </div>
+
+        <div class="history-section">
+            <h3>📜 Recent Predictions</h3>
+            <ul id="history-list">
+                <li class="history-empty">No predictions yet</li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <p>Powered by Spring Boot ML Backend</p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome / Empty State -->
+        <section class="welcome-section" id="welcome-section">
+            <div class="welcome-card">
+                <div class="welcome-icon">🎶</div>
+                <h2>Welcome to SongScope</h2>
+                <p>
+                    Enter song lyrics in the sidebar to predict which genre they
+                    belong to. The AI classifier will analyze the text and show
+                    similarity scores across 8 music genres.
+                </p>
+                <div class="genre-tags">
+                    <span class="genre-tag pop">Pop</span>
+                    <span class="genre-tag country">Country</span>
+                    <span class="genre-tag blues">Blues</span>
+                    <span class="genre-tag jazz">Jazz</span>
+                    <span class="genre-tag reggae">Reggae</span>
+                    <span class="genre-tag rock">Rock</span>
+                    <span class="genre-tag hiphop">Hip Hop</span>
+                    <span class="genre-tag metal">Metal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section (hidden initially) -->
+        <section class="results-section" id="results-section" hidden>
+            <!-- Compact results header row -->
+            <div class="results-header">
+                <div class="top-prediction" id="top-prediction">
+                    <span class="top-prediction-label">Predicted Genre:</span>
+                    <span class="top-prediction-genre" id="top-genre">—</span>
+                    <span class="top-prediction-confidence" id="top-confidence">—</span>
+                </div>
+                <div class="status-badge" id="status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Ready</span>
+                </div>
+            </div>
+
+            <div class="mock-notice" id="mock-notice" hidden>
+                ⚠️ Mock data — Spring Boot backend not connected.
+            </div>
+
+            <!-- Score pills row -->
+            <div class="score-pills" id="score-pills"></div>
+
+            <!-- Two large charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-wrapper">
+                        <canvas id="radar-chart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-wrapper">
+                        <canvas id="bar-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- App JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
