@@ -1,0 +1,43 @@
+// This plugin provides the 'shadowJar' task, which create an assembly jar.
+// Because Spark requires your jar to bundle everything except spark and hadoop.
+plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+jar {
+    archiveBaseName = 'spark-distributed-library'
+}
+
+configurations {
+    all*.exclude group: 'org.eclipse.jetty.orbit', module: 'javax.servlet'
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j2-impl'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "org.codehaus.janino:janino:$sparkJaninoVersion"
+        force "org.codehaus.janino:commons-compiler:$sparkJaninoVersion"
+    }
+}
+
+dependencies {
+    // All Spark dependencies should not be in shadowJar.
+    implementation("org.apache.spark:spark-core_$apacheSparkScalaVersion:$apacheSparkVersion")
+    implementation("org.apache.spark:spark-sql_$apacheSparkScalaVersion:$apacheSparkVersion")
+    implementation("org.apache.spark:spark-mllib_$apacheSparkScalaVersion:$apacheSparkVersion")
+
+    implementation("ch.qos.logback:logback-core:$logbackVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion")
+    
+    // Use local libstemmer_java for Snowball stemming (Java 21 compatible, replaces spark-stemming_2.10)
+    implementation project(':libstemmer_java')
+}
+
+configurations {
+    // We don't want the Spark dependencies in our shadowJar.
+    runtime.exclude group: 'org.apache.spark'
+}

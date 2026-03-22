@@ -1,0 +1,40 @@
+configurations {
+    all*.exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j-impl'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-slf4j2-impl'
+    all*.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "org.codehaus.janino:janino:$sparkJaninoVersion"
+        force "org.codehaus.janino:commons-compiler:$sparkJaninoVersion"
+        force "com.fasterxml.jackson.core:jackson-core:$sparkJacksonVersion"
+        force "com.fasterxml.jackson.core:jackson-databind:$sparkJacksonVersion"
+        force "com.fasterxml.jackson.module:jackson-module-scala_$apacheSparkScalaVersion:$sparkJacksonVersion"
+    }
+}
+
+dependencies {
+    implementation project(':spark-distributed-library')
+
+    implementation("org.springframework:spring-beans:$springFrameworkVersion")
+    implementation("org.springframework:spring-context:$springFrameworkVersion")
+
+    implementation("org.apache.spark:spark-core_$apacheSparkScalaVersion:$apacheSparkVersion")
+    implementation("org.apache.spark:spark-sql_$apacheSparkScalaVersion:$apacheSparkVersion")
+    implementation("org.apache.spark:spark-mllib_$apacheSparkScalaVersion:$apacheSparkVersion")
+
+    implementation("org.scala-lang:scala-library:2.13.13")
+
+    implementation("jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion")
+
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+    runtimeOnly("jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion")
+
+    testImplementation("org.springframework:spring-test:$springFrameworkVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+}

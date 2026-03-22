@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'org.springframework.boot'
+
+configurations.all {
+    resolutionStrategy {
+        force "org.codehaus.janino:janino:$sparkJaninoVersion"
+        force "org.codehaus.janino:commons-compiler:$sparkJaninoVersion"
+        force "com.fasterxml.jackson.core:jackson-core:$sparkJacksonVersion"
+        force "com.fasterxml.jackson.core:jackson-databind:$sparkJacksonVersion"
+//        force "jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion"
+    }
+}
+
+dependencies {
+    implementation project(':spark-driver')
+
+    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+        exclude module: 'spring-boot-starter-tomcat'
+        exclude module: 'spring-boot-starter-logging'
+    }
+
+    implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
+
+
+    implementation("org.apache.spark:spark-mllib_$apacheSparkScalaVersion:$apacheSparkVersion")
+    implementation("org.scala-lang:scala-library:2.13.13")
+
+    implementation ('javax.servlet:javax.servlet-api:4.0.1')
+    implementation("jakarta.servlet:jakarta.servlet-api:$jakartaServletApiVersion")
+
+    implementation("ch.qos.logback:logback-core:$logbackVersion")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation("org.springframework:spring-test:$springFrameworkVersion")
+}
+
+bootJar {
+    // Exclude conflicting logging jars
+    exclude 'BOOT-INF/lib/log4j-*.jar'
+    exclude 'BOOT-INF/lib/log4j-slf4j-impl-*.jar'
+    exclude 'BOOT-INF/lib/log4j-slf4j2-impl-*.jar'
+    exclude 'BOOT-INF/lib/log4j-to-slf4j-*.jar'
+}

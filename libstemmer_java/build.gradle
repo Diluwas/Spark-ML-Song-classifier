@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.tartarus.snowball'
+version = '1.3.0'
+sourceCompatibility = 21
+targetCompatibility = 21
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['java']
+        }
+    }
+}
+
+// Configure compiler to allow unreachable code patterns in generated Snowball stemmers
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.addAll([
+        '--release', '21',
+        '-Xlint:-fallthrough,-removal'
+    ])
+    options.encoding = 'UTF-8'
+    options.deprecation = false
+}
+
+jar {
+    manifest {
+        attributes(
+            'Implementation-Title': 'libstemmer_java',
+            'Implementation-Version': version,
+            'Main-Class': 'org.tartarus.snowball.TestApp'
+        )
+    }
+}
+

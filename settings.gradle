@@ -1,0 +1,10 @@
+rootProject.name = 'machine-learning-with-apache-spark'
+include ':libstemmer_java'
+include ':spark-distributed-library'
+include ':spark-driver'
+include ':api'
+
+project(':libstemmer_java').projectDir = "$rootDir/libstemmer_java" as File
+project(':spark-distributed-library').projectDir = "$rootDir/spark-distributed-library" as File
+project(':spark-driver').projectDir = "$rootDir/spark-driver" as File
+project(':api').projectDir = "$rootDir/api" as File
